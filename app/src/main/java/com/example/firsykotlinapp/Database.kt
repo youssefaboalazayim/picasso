@@ -11,16 +11,11 @@ abstract class MyDatabase : RoomDatabase() {
 
     abstract fun dao(): Dao
 
-    // create instance
-
-    // invole interdface
-    abstract fun postsDao(): Dao?
-
     companion object{
         private var instance: MyDatabase ? = null
 
         @Synchronized
-        open fun getInstance(context: Context): MyDatabase ? {
+        fun getInstance(context: Context): MyDatabase ? {
             if (instance == null) {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
