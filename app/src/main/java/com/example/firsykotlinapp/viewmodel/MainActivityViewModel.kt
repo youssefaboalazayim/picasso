@@ -25,21 +25,6 @@ class MainActivityViewModel : ViewModel() {
         return recyclerListLiveData
     }
 
-    //Coroutine
-//    fun makeApiCall(){
-//        viewModelScope.launch(Dispatchers.IO){
-//            // هنا كده مالينا interface
-//            val retroInstance = RetrofitInstance.getRetrofitInstance().create(RetrofitService::class.java)
-//            //ربط الانشاء الانا عملته ب function الجوا interface
-//            val response = retroInstance.getDataFromApi("ny")
-//            //  بباصى كلام ده لل mutable
-//            recyclerListLiveData.postValue(response)
-//        }
-//    }
-
-
-
-
     //RXJava
     fun makeApiCall(page:Int){
         val instance = RetrofitInstance.getRetrofitInstance().create(RetrofitService::class.java)
@@ -48,10 +33,11 @@ class MainActivityViewModel : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
+                savePost(response)
                 onResponse(response)},
                 {t ->
                     if(page<=1){
-                        roomRX()
+                        getPostFromLocal()
                     }
                     else{
                     onFailure(t)}
@@ -73,11 +59,11 @@ class MainActivityViewModel : ViewModel() {
     }
 
     private fun onFailure(t: Throwable) {
-        apiError.postValue("cosom amr")
+        apiError.postValue("Something With Wrong")
     }
 
-    fun roomRX(){
-        database.dao().getItems()
+    fun getPostFromLocal(){
+        database.dao().getPost()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -85,81 +71,13 @@ class MainActivityViewModel : ViewModel() {
                     onResponse(data) }
                 , {t -> onFailure(t) }
             )}
-
-
-//    //CallBack
-//    fun callBack(){
-//        val instance = RetrofitInstance.getRetrofitInstance().create(RetrofitService::class.java)
-//        val response = instance.getDataFromApi("ny")
-//        response.enqueue(object : Callback<RecyclerList> {
-//            override fun onResponse(
-//                call: Call<RecyclerList?>,
-//                response: Response<RecyclerList?>
-//            ) {
-//            }
-//
-//            override fun onFailure(call: Call<RecyclerList>, t: Throwable) {
-//            }
-//        })
-//
-//
-//
-//    }
-
-
-
-
-
-//    fun getAllMovies() {
-//
-//        val response = repository.getAllMovies()
-//
-//        response.enqueue(object : Callback<List<Movie>> {
-//            override fun onResponse(call: Call<List<Movie>>, response: Response<List<Movie>>) {
-//                movieList.postValue(response.body())
-//            }
-//
-//            override fun onFailure(call: Call<List<Movie>>, t: Throwable) {
-//                errorMessage.postValue(t.message)
-//            }
-//        })
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    private void getMovies(String query, int pageNumber){
-//        Service.getMoviesApi().searchMovie(Credentials.API_KEY, query, pageNumber)
-//            .enqueue(new Callback<MovieSearchResponse>() {
-//                @Override
-//                public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
-//                    movieMutableLiveData.postValue(response.body().getMovieList());
-//                }
-//
-//                @Override
-//                public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
-//                    Log.v("you", " error ");
-//                }
-//            });
-//    }
-
-
+    fun savePost(postList : RecyclerList){
+        database.dao().insertPost(postList)?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({},
+                {t ->onFailure(t) }
+            )
+    }
 }
 
 

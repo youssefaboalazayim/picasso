@@ -1,5 +1,6 @@
 package com.example.firsykotlinapp.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso
 class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> (){
 
     var itemsList : MutableList<RecyclerData> = mutableListOf()
+
 
     fun setUpdateData (itemsList: RecyclerList){
         this.itemsList.addAll(itemsList.items)

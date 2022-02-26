@@ -1,10 +1,10 @@
 package com.example.firsykotlinapp.ui
 
-import android.opengl.Visibility
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -29,8 +29,7 @@ class RecyclerListFragment : Fragment() {
     var viewModel:MainActivityViewModel ?=null
 
 
-    private lateinit var recyclerViewAdapter : RecyclerViewAdapter
-
+    private var recyclerViewAdapter : RecyclerViewAdapter = RecyclerViewAdapter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,11 +43,10 @@ class RecyclerListFragment : Fragment() {
     }
 
     fun initUi(view: View){
-
-        val recyclerView =   view.findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
-        recyclerView.adapter= RecyclerViewAdapter()
+        recyclerView.adapter= recyclerViewAdapter
         recyclerView.addItemDecoration(decoration)
 
         recyclerView.addOnScrollListener(object  : ScrollListener(recyclerView.layoutManager as  LinearLayoutManager){
@@ -73,16 +71,21 @@ class RecyclerListFragment : Fragment() {
         })
     }
 
+
     private fun initViewModel(){
         viewModel =  ViewModelProvider(this).get(MainActivityViewModel::class.java)
         viewModel?.database = database ?: return
         viewModel?.recyclerListObserver()?.observe(viewLifecycleOwner) {
             it?.let {
+                view?.findViewById<ProgressBar>(R.id.main_progress)?.visibility  = GONE
                 recyclerViewAdapter.setUpdateData(it)
+                isLoading=false
             } ?: Toast.makeText(activity, "Error in getting data", Toast.LENGTH_LONG).show()
+
         }
         viewModel?.apiError?.observe(viewLifecycleOwner){ errorMessage ->
             Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
+            view?.findViewById<ProgressBar>(R.id.main_progress)?.visibility  = GONE
         }
         viewModel?.apiLoadingProgressBar?.observe(viewLifecycleOwner){
             view?.findViewById<ProgressBar>(R.id.main_progress)?.visibility  = VISIBLE
