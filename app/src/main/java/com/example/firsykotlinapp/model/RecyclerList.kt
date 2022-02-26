@@ -2,11 +2,16 @@ package com.example.firsykotlinapp.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import com.example.firsykotlinapp.MyTypeConverter
+
 
 @Entity(tableName = "list")
-data class RecyclerList(val items : ArrayList<RecyclerData>)
+data class RecyclerList(
+    @TypeConverters(MyTypeConverter::class)
+    val items : ArrayList<RecyclerData>)
 
-@Entity(tableName = "items")
 data class RecyclerData(
     @PrimaryKey()
     val name : String,

@@ -25,7 +25,7 @@ class RecyclerListFragment : Fragment() {
     private var totalPages: Int = 1
     private var currentPage: Int = pageStart
 
-    var database: MyDatabase ?=null
+    private var database: MyDatabase ?=null
     var viewModel:MainActivityViewModel ?=null
 
 
