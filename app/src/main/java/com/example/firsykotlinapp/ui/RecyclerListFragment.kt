@@ -25,8 +25,8 @@ class RecyclerListFragment : Fragment() {
     private var totalPages: Int = 1
     private var currentPage: Int = pageStart
 
-    val database: MyDatabase? = MyDatabase.getInstance(requireContext())
-    val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+    var database: MyDatabase ?=null
+    var viewModel:MainActivityViewModel ?=null
 
 
     private lateinit var recyclerViewAdapter : RecyclerViewAdapter
@@ -37,12 +37,14 @@ class RecyclerListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view=  inflater.inflate(R.layout.fragment_recycler_list, container, false)
+        database =MyDatabase.getInstance(requireContext())
         initUi(view)
         initViewModel()
         return view
     }
 
     fun initUi(view: View){
+
         val recyclerView =   view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
@@ -53,7 +55,7 @@ class RecyclerListFragment : Fragment() {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage++
-                viewModel.makeApiCall(currentPage)
+                viewModel?.makeApiCall(currentPage)
             }
 
             override fun getTotalPageCount(): Int {
@@ -72,19 +74,20 @@ class RecyclerListFragment : Fragment() {
     }
 
     private fun initViewModel(){
-        viewModel.database = database ?: return
-        viewModel.recyclerListObserver().observe(viewLifecycleOwner) {
+        viewModel =  ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel?.database = database ?: return
+        viewModel?.recyclerListObserver()?.observe(viewLifecycleOwner) {
             it?.let {
                 recyclerViewAdapter.setUpdateData(it)
             } ?: Toast.makeText(activity, "Error in getting data", Toast.LENGTH_LONG).show()
         }
-        viewModel.apiError.observe(viewLifecycleOwner){ errorMessage ->
+        viewModel?.apiError?.observe(viewLifecycleOwner){ errorMessage ->
             Toast.makeText(context,errorMessage,Toast.LENGTH_LONG).show()
         }
-        viewModel.apiLoadingProgressBar.observe(viewLifecycleOwner){
+        viewModel?.apiLoadingProgressBar?.observe(viewLifecycleOwner){
             view?.findViewById<ProgressBar>(R.id.main_progress)?.visibility  = VISIBLE
         }
-        viewModel.makeApiCall(currentPage)
+        viewModel?.makeApiCall(currentPage)
     }
 
     companion object {
