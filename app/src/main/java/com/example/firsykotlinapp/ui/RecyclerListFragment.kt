@@ -37,7 +37,7 @@ class RecyclerListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view=  inflater.inflate(R.layout.fragment_recycler_list, container, false)
-        database =MyDatabase.getInstance(requireContext())
+        database = MyDatabase.getInstance(requireContext())
         initUi(view)
         initViewModel()
         return view

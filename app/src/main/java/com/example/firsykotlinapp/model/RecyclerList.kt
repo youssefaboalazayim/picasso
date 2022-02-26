@@ -3,6 +3,7 @@ package com.example.firsykotlinapp.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+@Entity(tableName = "list")
 data class RecyclerList(val items : ArrayList<RecyclerData>)
 
 @Entity(tableName = "items")
