@@ -1,7 +1,17 @@
-package com.example.firsykotlinapp
+package com.example.firsykotlinapp.model
 
-import java.security.acl.Owner
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 data class RecyclerList(val items : ArrayList<RecyclerData>)
-data class RecyclerData(val name : String, val description : String, val owner : com.example.firsykotlinapp.Owner)
-data class Owner (val avatar_url : String)
+
+@Entity(tableName = "items")
+data class RecyclerData(
+    @PrimaryKey()
+    val name : String,
+    val description : String,
+    val owner : Owner
+    )
+data class Owner (
+    val avatar_url : String
+    )

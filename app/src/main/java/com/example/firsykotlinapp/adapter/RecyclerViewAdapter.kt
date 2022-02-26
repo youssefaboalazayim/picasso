@@ -7,18 +7,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firsykotlinapp.R
-import com.example.firsykotlinapp.RecyclerData
+import com.example.firsykotlinapp.model.RecyclerData
+import com.example.firsykotlinapp.model.RecyclerList
 import com.squareup.picasso.Picasso
 
 class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> (){
 
-    var itemsList = ArrayList<RecyclerData>()
+    var itemsList : MutableList<RecyclerData> = mutableListOf()
 
-    fun setUpdateData (itemsList : ArrayList<RecyclerData> ){
-        this.itemsList = itemsList
+    fun setUpdateData (itemsList: RecyclerList){
+        this.itemsList.addAll(itemsList.items)
         notifyDataSetChanged()
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -33,6 +33,8 @@ class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolde
     override fun getItemCount(): Int {
         return itemsList.size
     }
+
+
 
     class MyViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
 

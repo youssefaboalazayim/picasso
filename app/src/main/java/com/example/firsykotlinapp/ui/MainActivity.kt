@@ -8,6 +8,9 @@ import com.example.firsykotlinapp.R
 
 class MainActivity : AppCompatActivity() {
 
+
+
+
 //    lateinit var recyclerView:RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
